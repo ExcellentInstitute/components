@@ -67,6 +67,7 @@
             opacity: 0.9;
         }
 
+        /* CARD LAYOUT: Forced to stack text on top, image on bottom */
         .port-card {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -78,14 +79,9 @@
             gap: 20px;
         }
 
-        @media (min-width: 768px) {
-            .port-card {
-                flex-direction: row;
-                align-items: stretch;
-            }
+        .port-info { 
+            width: 100%; 
         }
-
-        .port-info { flex: 2; }
         
         .port-info h3 {
             color: var(--primary-color);
@@ -95,9 +91,9 @@
             font-size: 1.4rem;
         }
 
+        /* RESPONSIVE IMAGE PLACEHOLDER */
         .image-placeholder {
-            flex: 1;
-            min-height: 200px;
+            width: 100%;
             border: 3px dashed #cccccc;
             border-radius: 8px;
             background-color: #fafafa;
@@ -107,16 +103,17 @@
             text-align: center;
             color: #888888;
             font-weight: bold;
-            position: relative;
-            overflow: hidden;
             padding: 20px;
+            box-sizing: border-box; /* Ensures padding doesn't break the layout width */
         }
 
+        /* MAKES THE ACTUAL IMAGE RESPONSIVE TO ANY SIZE */
         .image-placeholder img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            position: absolute;
+            max-width: 100%; /* Prevents the image from overflowing its container */
+            height: auto; /* Maintains the natural aspect ratio of the image */
+            display: block;
+            margin: 0 auto; /* Centers the image if it is smaller than the container */
+            border-radius: 4px;
         }
         
         ul { padding-left: 20px; }
