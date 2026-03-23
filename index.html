@@ -2,9 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excellent institute - Comprehensive Hardware Fundamentals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Excellent Institute - Comprehensive Hardware Fundamentals</title>
     <style>
+        /* CSS Reset for consistent cross-browser look */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* WATERMARK LOGO BACKGROUND - This applies to screen viewing */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('image_0.png'); /* Logo in same folder */
+            background-attachment: fixed;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.05; /* Translucent watermark */
+            z-index: -1; /* Behind content */
+            pointer-events: none; /* Allows scrolling on top */
+        }
+
+        /* Prevent watermark from showing in print view (explicit logo used instead) */
+        @media print {
+            body::before { display: none !important; }
+        }
+
+        /* Variables and Global Styles */
         :root {
             --primary-color: #0056b3;
             --secondary-color: #28a745;
@@ -15,20 +46,33 @@
             --text-color: #333333;
         }
 
+        /* ANDROID / MOBILE SCROLLING OPTIMIZATION */
+        html {
+            scroll-behavior: smooth; /* Native smooth scrolling on gesture */
+            overflow-y: scroll; /* Ensures vertical scroll is always active */
+            -webkit-overflow-scrolling: touch; /* Extra smoothness on touch devices */
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            background-color: transparent; /* Watermark visible behind */
             color: var(--text-color);
             line-height: 1.6;
-            margin: 0;
             padding: 20px;
+            overflow-x: hidden; /* Avoids accidental horizontal scroll on mobile */
+            -webkit-overflow-scrolling: touch; /* Apply to body for touch interaction */
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            position: relative; /* Context for z-index of watermark and content */
+            background-color: rgba(248, 249, 250, 0.9); /* Opaque container to lift text */
+            padding: 20px;
+            border-radius: 8px;
         }
 
+        /* Page header with full Logo replacement and subtitle */
         header {
             text-align: center;
             margin-bottom: 40px;
@@ -37,17 +81,43 @@
             color: white;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        .institute-name {
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
+        header img.main-logo {
+            max-width: 100%;
+            height: auto;
+            width: 250px; /* Optimal size for screen header */
+        }
+
+        header .subtitle {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        /* PRINT BUTTON - visible only on screen */
+        .print-btn {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 10px 25px;
             font-weight: bold;
-            color: #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+        .print-btn:hover {
+            background-color: rgba(255, 255, 255, 0.8);
         }
 
+        /* Section Title Banners */
         .section-header {
             color: white;
             padding: 15px;
@@ -56,18 +126,9 @@
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .section-header h2 { font-size: 1.8rem; margin: 0; }
 
-        h1, h2, h3 { margin: 0; }
-        header h1 { font-size: 2.5rem; }
-        .section-header h2 { font-size: 1.8rem; }
-
-        p.subtitle {
-            margin: 10px 0 0 0;
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* CARD LAYOUT: Forced to stack text on top, image on bottom */
+        /* PORT CARD - Stacked vertically (Text then Image below) */
         .port-card {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -75,14 +136,14 @@
             margin-bottom: 30px;
             padding: 25px;
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Force stacking on all screen sizes */
             gap: 20px;
         }
 
-        .port-info { 
-            width: 100%; 
+        .port-info {
+            width: 100%;
         }
-        
+
         .port-info h3 {
             color: var(--primary-color);
             margin-top: 0;
@@ -91,33 +152,30 @@
             font-size: 1.4rem;
         }
 
-        /* RESPONSIVE IMAGE PLACEHOLDER */
+        /* Responsive Image container at bottom of card */
         .image-placeholder {
             width: 100%;
-            border: 3px dashed #cccccc;
+            border: 1px solid #ddd; /* Subtle border for image content */
             border-radius: 8px;
             background-color: #fafafa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #888888;
-            font-weight: bold;
-            padding: 20px;
-            box-sizing: border-box; /* Ensures padding doesn't break the layout width */
+            display: block;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center; /* Center smaller images */
         }
 
-        /* MAKES THE ACTUAL IMAGE RESPONSIVE TO ANY SIZE */
+        /* MAKES THE ACTUAL IMAGE RESPONSIVE TO ANY SIZE (height or width) */
         .image-placeholder img {
             max-width: 100%; /* Prevents the image from overflowing its container */
             height: auto; /* Maintains the natural aspect ratio of the image */
             display: block;
-            margin: 0 auto; /* Centers the image if it is smaller than the container */
+            margin: 0 auto; /* Centers the image */
             border-radius: 4px;
         }
-        
+
         ul { padding-left: 20px; }
-        
+
+        /* Footer - subtle and holds logo in print view * (though print hiding handles it) */
         footer {
             text-align: center;
             margin-top: 50px;
@@ -125,16 +183,124 @@
             color: #666;
             font-size: 0.9rem;
             border-top: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* SCREEN RESPONSIVENESS ANDROID SPECIFIC ADJUSTMENTS */
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 10px; }
+            header img.main-logo { width: 180px; } /* Smaller logo on small phone */
+            header .subtitle { font-size: 0.95rem; }
+            .port-card { padding: 15px; gap: 10px; }
+            .port-info h3 { font-size: 1.25rem; }
+            .image-placeholder { padding: 5px; }
+        }
+
+        /* PRINT STYLING - Ensuring logo is prominent and content is clean */
+        @media print {
+            /* Hide print-only stuff on screen and interactive elements */
+            .print-btn, .institute-name, footer { display: none !important; }
+
+            /* Reset for paper print */
+            body { background-color: white !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .container { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 15px !important; background-color: transparent !important; }
+
+            /* Explicit print header with Logo visible on at least first page */
+            header {
+                background-color: transparent !important;
+                color: black !important;
+                box-shadow: none !important;
+                margin-bottom: 20px;
+                padding: 0;
+                page-break-after: avoid; /* Don't split header from first section */
+            }
+            header img.main-logo {
+                width: 180px !important; /* Proper size for print page header */
+                display: block;
+                filter: brightness(0); /* Black and white logo for printing */
+                margin-bottom: 10px;
+            }
+
+            header .subtitle {
+                color: black !important;
+                font-size: 1rem !important;
+                margin-top: 0;
+            }
+
+            .section-header {
+                color: black !important;
+                background-color: transparent !important;
+                border: 1px solid black;
+                padding: 10px;
+                margin-top: 25px;
+                margin-bottom: 15px;
+                page-break-after: avoid; /* Prevent split after section title */
+            }
+            .section-header h2 { font-size: 1.6rem !important; }
+
+            .port-card {
+                margin-bottom: 20px;
+                padding: 15px;
+                page-break-inside: avoid; /* Crucial: prevent card splitting over pages */
+                display: flex;
+                border: 1px solid #ccc; /* Subtle border on print */
+                flex-direction: column; /* keep stack on print */
+                gap: 15px;
+            }
+
+            /* Add small logo to each port card on print ONLY to ensure logo on "every page/section" */
+            .port-card::after {
+                content: "";
+                display: block;
+                width: 70px; /* Small watermark logo in each card */
+                height: 70px;
+                background-image: url('image_0.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: right top;
+                float: right;
+                margin-top: -70px; /* Overlap into card content top right */
+                opacity: 0.4;
+            }
+
+            .port-info h3 {
+                font-size: 1.4rem !important;
+                border-bottom: 1px solid black;
+                padding-bottom: 5px;
+                color: black !important;
+            }
+
+            .image-placeholder {
+                border: none !important; /* remove screen borders */
+                padding: 10px;
+            }
+
+            /* Set safe limits for images in print view, allowing varied aspect ratios to fit page */
+            .image-placeholder img {
+                max-width: 100%;
+                max-height: 4in; /* Maximum height to prevent over-large images on page */
+                width: auto; /* Fit horizontal, but don't force stretch */
+            }
         }
     </style>
+
+    <script>
+        function printGuide() {
+            window.print();
+        }
+    </script>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="institute-name">Excellent institute</div>
-        <h1>Comprehensive Hardware Fundamentals</h1>
-        <p class="subtitle">The complete guide to external ports, primary hardware, motherboard components, and micro-electronics.</p>
+        <img src="image_0.png" alt="Excellent Institute Logo" class="main-logo">
+        <p class="subtitle">A comprehensive study guide covering external ports, primary hardware, motherboard components, and micro-electronics.</p>
+        <button class="print-btn" onclick="printGuide()">Print Guide</button>
     </header>
 
     <div class="section-header" style="background-color: var(--secondary-color);">
@@ -152,7 +318,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/usb-ports.jpg" alt="USB and Thunderbolt Ports">
+            <img src="usb-ports.jpg" alt="USB and Thunderbolt Ports">
         </div>
     </div>
 
@@ -167,7 +333,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/display-ports.jpg" alt="HDMI, DisplayPort, and VGA Connectors">
+            <img src="display-ports.jpg" alt="HDMI, DisplayPort, and VGA Connectors">
         </div>
     </div>
 
@@ -181,7 +347,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/audio-network.jpg" alt="Audio Jacks and Ethernet Ports">
+            <img src="audio-network.jpg" alt="Audio Jacks and Ethernet Ports">
         </div>
     </div>
 
@@ -199,7 +365,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/power-supply.jpg" alt="Computer Power Supply Unit">
+            <img src="power-supply.jpg" alt="Computer Power Supply Unit">
         </div>
     </div>
 
@@ -213,7 +379,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/graphics-card.jpg" alt="Dedicated Graphics Card GPU">
+            <img src="graphics-card.jpg" alt="Dedicated Graphics Card GPU">
         </div>
     </div>
 
@@ -227,7 +393,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/storage-drives.jpg" alt="Hard Disk Drive and Solid State Drive">
+            <img src="storage-drives.jpg" alt="Hard Disk Drive and Solid State Drive">
         </div>
     </div>
 
@@ -241,7 +407,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/cpu-cooler.jpg" alt="CPU Air Cooler and Heatsink">
+            <img src="cpu-cooler.jpg" alt="CPU Air Cooler and Heatsink">
         </div>
     </div>
 
@@ -255,7 +421,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/optical-drive.jpg" alt="Internal DVD and CD Drive">
+            <img src="optical-drive.jpg" alt="Internal DVD and CD Drive">
         </div>
     </div>
 
@@ -272,7 +438,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/cpu-ram-socket.jpg" alt="Motherboard CPU Socket and RAM Slots">
+            <img src="cpu-ram-socket.jpg" alt="Motherboard CPU Socket and RAM Slots">
         </div>
     </div>
 
@@ -286,7 +452,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/motherboard-chipset.jpg" alt="Motherboard Chipset and Heatsink">
+            <img src="motherboard-chipset.jpg" alt="Motherboard Chipset and Heatsink">
         </div>
     </div>
 
@@ -300,7 +466,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/expansion-slots.jpg" alt="PCIe, SATA, and NVMe Slots">
+            <img src="expansion-slots.jpg" alt="PCIe, SATA, and NVMe Slots">
         </div>
     </div>
 
@@ -314,7 +480,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/cmos-bios.jpg" alt="24-pin power connector and CMOS battery">
+            <img src="cmos-bios.jpg" alt="24-pin power connector and CMOS battery">
         </div>
     </div>
 
@@ -332,7 +498,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/cpu-architecture.jpg" alt="Diagram of CPU ALU and Control Unit">
+            <img src="cpu-architecture.jpg" alt="Diagram of CPU ALU and Control Unit">
         </div>
     </div>
 
@@ -345,7 +511,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/cpu-registers.jpg" alt="CPU Memory Registers Diagram">
+            <img src="cpu-registers.jpg" alt="CPU Memory Registers Diagram">
         </div>
     </div>
 
@@ -356,11 +522,11 @@
             <ul>
                 <li><strong>Data Bus:</strong> Carries the actual data being processed.</li>
                 <li><strong>Address Bus:</strong> Carries information about where the data needs to go in the memory.</li>
-                <li><strong>Control Bus:</strong> Carries command signals from the CPU to other devices (e.g., "Read" or "Write").</li>
+                <li><strong>Control Bus:</strong> Carries command signals from the CPU to other devices (e.g., "Read" or Write").</li>
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/system-buses.jpg" alt="Data Address and Control Bus Diagram">
+            <img src="system-buses.jpg" alt="Data Address and Control Bus Diagram">
         </div>
     </div>
 
@@ -375,7 +541,7 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/vrm-components.jpg" alt="Motherboard VRM Chokes and Capacitors">
+            <img src="vrm-components.jpg" alt="Motherboard VRM Chokes and Capacitors">
         </div>
     </div>
 
@@ -388,12 +554,12 @@
             </ul>
         </div>
         <div class="image-placeholder">
-            <img src="images/transistors.jpg" alt="Microscopic Transistors and Resistors">
+            <img src="transistors.jpg" alt="Microscopic Transistors and Resistors">
         </div>
     </div>
     
     <footer>
-        Excellent institute | Teacher colony, near SBI bank, Surada, Ganjam, Odisha, 761108
+        <p>Excellent institute | Teacher colony, near SBI bank, Surada, Ganjam, Odisha, 761108</p>
     </footer>
 
 </div>
