@@ -20,13 +20,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('logo.jpeg'); /* Updated to logo.jpeg */
+            background-image: url('logo.jpeg');
             background-attachment: fixed;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             opacity: 0.05; /* Translucent watermark */
-            mix-blend-mode: multiply; /* Makes white background of logo invisible */
             z-index: -1; /* Behind content */
             pointer-events: none; /* Allows scrolling on top */
         }
@@ -62,6 +61,18 @@
             padding: 20px;
             overflow-x: hidden; 
             -webkit-overflow-scrolling: touch; 
+            cursor: grab; /* Shows users they can grab the page */
+        }
+
+        /* DRAG-TO-SCROLL CLASSES */
+        body.is-dragging {
+            cursor: grabbing !important; /* Changes cursor when actively dragging */
+            user-select: none; /* Prevents text from accidentally highlighting while dragging */
+        }
+        
+        body.is-dragging * {
+            cursor: grabbing !important;
+            user-select: none !important;
         }
 
         .container {
@@ -73,7 +84,7 @@
             border-radius: 8px;
         }
 
-        /* Page header with full Logo replacement and subtitle */
+        /* Page header */
         header {
             text-align: center;
             margin-bottom: 40px;
@@ -88,15 +99,14 @@
             gap: 10px;
         }
 
-        /* LOGO STYLING - Forces perfect circle and blends background */
+        /* LOGO STYLING */
         header img.main-logo {
             width: 250px; 
-            aspect-ratio: 1 / 1; /* Forces a perfect square ratio before rounding */
-            border-radius: 50%; /* Makes it a perfect circle */
+            aspect-ratio: 1 / 1; 
+            border-radius: 50%; 
             object-fit: cover;
-            mix-blend-mode: multiply; /* Removes white borders against colored background */
-            background-color: white; /* Ensures inside of logo stays bright */
-            border: 4px solid white; /* Adds a nice white ring around the circle */
+            background-color: white; 
+            border: 4px solid white; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
@@ -108,7 +118,7 @@
             margin-top: 10px;
         }
 
-        /* PRINT BUTTON - visible only on screen */
+        /* PRINT BUTTON */
         .print-btn {
             background-color: white;
             color: var(--primary-color);
@@ -136,7 +146,7 @@
         }
         .section-header h2 { font-size: 1.8rem; margin: 0; }
 
-        /* PORT CARD - Stacked vertically (Text then Image below) */
+        /* PORT CARD */
         .port-card {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -160,7 +170,7 @@
             font-size: 1.4rem;
         }
 
-        /* Responsive Image container at bottom of card */
+        /* Responsive Image container */
         .image-placeholder {
             width: 100%;
             border: 1px solid #ddd; 
@@ -172,7 +182,6 @@
             text-align: center; 
         }
 
-        /* MAKES THE ACTUAL IMAGE RESPONSIVE TO ANY SIZE (height or width) */
         .image-placeholder img {
             max-width: 100%; 
             height: auto; 
@@ -198,22 +207,22 @@
             font-weight: bold;
         }
 
-        /* SCREEN RESPONSIVENESS ANDROID SPECIFIC ADJUSTMENTS */
+        /* SCREEN RESPONSIVENESS */
         @media (max-width: 480px) {
             body { padding: 10px; }
             .container { padding: 10px; }
-            header img.main-logo { width: 160px; } /* Smaller logo on small phone */
+            header img.main-logo { width: 160px; } 
             header .subtitle { font-size: 0.95rem; }
             .port-card { padding: 15px; gap: 10px; }
             .port-info h3 { font-size: 1.25rem; }
             .image-placeholder { padding: 5px; }
         }
 
-        /* PRINT STYLING - Ensuring logo is prominent and content is clean */
+        /* PRINT STYLING */
         @media print {
             .print-btn, footer { display: none !important; }
 
-            body { background-color: white !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background-color: white !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; cursor: default; }
             .container { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 15px !important; background-color: transparent !important; }
 
             header {
@@ -229,8 +238,7 @@
                 width: 150px !important; 
                 display: block;
                 margin: 0 auto 10px auto;
-                border: 2px solid #ccc; /* Thinner border for print */
-                mix-blend-mode: normal; /* Turn off multiply for print clarity */
+                border: 2px solid #ccc; 
             }
 
             header .subtitle {
@@ -258,10 +266,9 @@
                 border: 1px solid #ccc; 
                 flex-direction: column; 
                 gap: 15px;
-                position: relative; /* Context for watermark */
+                position: relative; 
             }
 
-            /* Circular, blended watermark in the corner of every print card */
             .port-card::after {
                 content: "";
                 position: absolute;
@@ -273,9 +280,9 @@
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: center;
-                border-radius: 50%; /* Forces circle */
-                mix-blend-mode: multiply; /* Removes white square background */
-                opacity: 0.3; /* Subtle so it doesn't block text */
+                border-radius: 50%; 
+                mix-blend-mode: multiply; 
+                opacity: 0.3; 
                 pointer-events: none;
             }
 
@@ -284,7 +291,7 @@
                 border-bottom: 1px solid black;
                 padding-bottom: 5px;
                 color: black !important;
-                width: 85%; /* Leave room for corner watermark */
+                width: 85%; 
             }
 
             .image-placeholder {
@@ -299,12 +306,6 @@
             }
         }
     </style>
-
-    <script>
-        function printGuide() {
-            window.print();
-        }
-    </script>
 </head>
 <body>
 
@@ -496,4 +497,125 @@
         </div>
     </div>
 
-    <div class="section-header" style="bac
+    <div class="section-header" style="background-color: var(--tertiary-color);">
+        <h2>Part 4: Micro-Components & Processing Elements</h2>
+    </div>
+
+    <div class="port-card">
+        <div class="port-info">
+            <h3>1. The Processor (CPU) Architecture</h3>
+            <ul>
+                <li><strong>ALU (Arithmetic Logic Unit):</strong> Performs all mathematical calculations and logical decisions.</li>
+                <li><strong>CU (Control Unit):</strong> Directs the operation of the processor, fetching instructions from memory and routing data.</li>
+                <li><strong>Cache (L1, L2, L3):</strong> Super-fast memory built directly onto the CPU die to store frequently used data.</li>
+            </ul>
+        </div>
+        <div class="image-placeholder">
+            <img src="cpu-architecture.jpg" alt="Diagram of CPU ALU and Control Unit">
+        </div>
+    </div>
+
+    <div class="port-card">
+        <div class="port-info">
+            <h3>2. CPU Registers</h3>
+            <p>Registers are the absolute smallest, fastest, and most crucial type of memory, located inside the CPU core.</p>
+            <ul>
+                <li>They hold the exact immediate data the ALU is currently calculating (often just 32 or 64 bits at a time). Examples include the Accumulator and the Program Counter.</li>
+            </ul>
+        </div>
+        <div class="image-placeholder">
+            <img src="cpu-registers.jpg" alt="CPU Memory Registers Diagram">
+        </div>
+    </div>
+
+    <div class="port-card">
+        <div class="port-info">
+            <h3>3. System Buses</h3>
+            <p>A "Bus" is a communication system or physical pathway (microscopic wires) that transfers data between components.</p>
+            <ul>
+                <li><strong>Data Bus:</strong> Carries the actual data being processed.</li>
+                <li><strong>Address Bus:</strong> Carries information about where the data needs to go in the memory.</li>
+                <li><strong>Control Bus:</strong> Carries command signals from the CPU to other devices (e.g., "Read" or "Write").</li>
+            </ul>
+        </div>
+        <div class="image-placeholder">
+            <img src="system-buses.jpg" alt="Data Address and Control Bus Diagram">
+        </div>
+    </div>
+
+    <div class="port-card">
+        <div class="port-info">
+            <h3>4. VRM, Inductors (Chokes), and Capacitors</h3>
+            <p>These components work together around the CPU socket to deliver clean, exact power.</p>
+            <ul>
+                <li><strong>VRM (Voltage Regulator Module):</strong> Takes the 12 Volts from the PSU and carefully steps it down to the ~1.2 Volts the CPU needs.</li>
+                <li><strong>Inductors (Chokes):</strong> The little square blocks near the CPU. They store energy in a magnetic field to smooth out sudden changes in electrical current.</li>
+                <li><strong>Capacitors:</strong> Tiny cylinders that store and release electrical energy to "clean" and filter the voltage, absorbing power spikes.</li>
+            </ul>
+        </div>
+        <div class="image-placeholder">
+            <img src="vrm-components.jpg" alt="Motherboard VRM Chokes and Capacitors">
+        </div>
+    </div>
+
+    <div class="port-card">
+        <div class="port-info">
+            <h3>5. Transistors & Resistors</h3>
+            <ul>
+                <li><strong>Transistors:</strong> Microscopic semiconductor switches. A modern CPU contains billions of them. By turning on and off (representing 1s and 0s), they perform the logic operations of computing.</li>
+                <li><strong>Resistors:</strong> Small components that limit or regulate the flow of electrical current to protect delicate circuits.</li>
+            </ul>
+        </div>
+        <div class="image-placeholder">
+            <img src="transistors.jpg" alt="Microscopic Transistors and Resistors">
+        </div>
+    </div>
+    
+    <footer>
+        <p>Excellent institute | 019, Teacher colony, near SBI bank, Surada, Ganjam, Odisha, 761108</p>
+        <p>Ph: 6371305069</p>
+    </footer>
+
+</div>
+
+<script>
+    function printGuide() {
+        window.print();
+    }
+
+    // Drag-to-Scroll Functionality
+    let isDown = false;
+    let startY;
+    let scrollTop;
+
+    document.addEventListener('mousedown', (e) => {
+        // Prevent drag behavior if clicking a button (like Print) or link
+        if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) return;
+        
+        isDown = true;
+        document.body.classList.add('is-dragging');
+        startY = e.clientY;
+        scrollTop = window.scrollY || document.documentElement.scrollTop;
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDown = false;
+        document.body.classList.remove('is-dragging');
+    });
+
+    document.addEventListener('mouseleave', () => {
+        isDown = false;
+        document.body.classList.remove('is-dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault(); // Prevents text selection while dragging
+        const y = e.clientY;
+        const walk = (y - startY) * 1.5; // The * 1.5 increases scroll speed slightly
+        window.scrollTo(0, scrollTop - walk);
+    });
+</script>
+
+</body>
+</html>
