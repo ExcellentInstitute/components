@@ -304,6 +304,9 @@
                 max-height: 4in; 
                 width: auto; 
             }
+            #dca-hardware-mastery {
+                page-break-before: always;
+            }
         }
     </style>
 </head>
@@ -316,6 +319,7 @@
         <button class="print-btn" onclick="printGuide()">Print Guide</button>
     </header>
 
+    <!-- EXISTING CONTENT PRESERVED -->
     <div class="section-header" style="background-color: var(--secondary-color);">
         <h2>Part 1: External Ports & Connectors</h2>
     </div>
@@ -570,7 +574,77 @@
             <img src="transistors.jpg" alt="Microscopic Transistors and Resistors">
         </div>
     </div>
-    
+
+    <!-- ========================================== -->
+    <!-- NEW SECTION: DCA EXCLUSIVE CONTENT         -->
+    <!-- ========================================== -->
+    <div id="dca-hardware-mastery">
+        <div class="section-header" style="background-color: #8b5cf6;">
+            <h2>Part 5: DCA Exclusive (Computer Parts & I/O Devices)</h2>
+        </div>
+
+        <!-- Lock Screen -->
+        <div id="dca-lock-screen" class="port-card" style="text-align: center; border: 2px dashed #8b5cf6; padding: 40px 20px;">
+            <div style="font-size: 4rem; margin-bottom: 10px;">🔒</div>
+            <h3 style="color: #8b5cf6; margin-top: 0; font-size: 1.8rem; border: none;">DCA Module Locked</h3>
+            <p style="color: var(--text-color); font-size: 1.1rem; margin-bottom: 20px;">Please enter the DCA password to access Basic Parts of a Computer and Input/Output Device theories.</p>
+            
+            <input type="password" id="dcaPass" placeholder="Enter Password" style="padding: 12px; font-size: 1.2rem; border: 2px solid #ccc; border-radius: 8px; width: 100%; max-width: 250px; text-align: center; outline: none; margin-bottom: 20px;">
+            <br>
+            
+            <button onclick="checkDcaPassword()" style="background-color: #8b5cf6; color: white; border: none; padding: 12px 40px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.2s;">
+                Unlock 🔓
+            </button>
+            
+            <p id="dca-wrong-pass" style="color: #dc2626; font-weight: bold; margin-top: 15px; display: none;">❌ Incorrect Password!</p>
+        </div>
+
+        <!-- Hidden Content -->
+        <div id="dca-locked-content" style="display: none;">
+            
+            <div class="port-card">
+                <div class="port-info">
+                    <h3>1. The 4 Main Parts of a Desktop Computer</h3>
+                    <p>When you sit at a computer desk, you usually see four main physical pieces. Together, these make the computer work:</p>
+                    <ul>
+                        <li><strong>1. Monitor:</strong> The screen that looks like a TV. It shows you the movies, games, and words you are typing.</li>
+                        <li><strong>2. Keyboard:</strong> The flat board with buttons for all the alphabets and numbers. We use it to type letters and instructions.</li>
+                        <li><strong>3. Mouse:</strong> A small device you move with your hand. It controls the tiny arrow (cursor) on the screen to click on things.</li>
+                        <li><strong>4. CPU Cabinet (System Unit):</strong> The large rectangular box. It is the "house" that holds the actual CPU Brain, Memory, and all the important wires safely inside.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="port-card">
+                <div class="port-info">
+                    <h3>2. Input Devices (Talking TO the Computer)</h3>
+                    <p>Input devices are the tools we humans use to send data and instructions INTO the computer.</p>
+                    <ul>
+                        <li><strong>Keyboard & Mouse:</strong> The most common ways to input words and clicks.</li>
+                        <li><strong>Microphone:</strong> Used to input your voice for talking or recording sound.</li>
+                        <li><strong>Scanner:</strong> Takes a digital picture of a real piece of paper (like a certificate) and puts it inside the computer screen.</li>
+                        <li><strong>Webcam:</strong> A small camera that takes live video of your face and sends it into the computer for video calls.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="port-card">
+                <div class="port-info">
+                    <h3>3. Output Devices (The Computer Talking to US)</h3>
+                    <p>Output devices are the tools the computer uses to give the final result BACK to the user.</p>
+                    <ul>
+                        <li><strong>Monitor:</strong> The main output device. It gives us a <em>Soft Copy</em> (a picture made of light on a screen).</li>
+                        <li><strong>Printer:</strong> Takes the file from the computer and puts ink on real paper. This gives us a <em>Hard Copy</em>.</li>
+                        <li><strong>Speakers & Headphones:</strong> Used by the computer to output sound, music, and warning beeps.</li>
+                        <li><strong>Projector:</strong> Takes the picture from the computer and throws it onto a large white wall or cloth so many people can see it at once.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- END OF DCA SECTION -->
+
     <footer>
         <p>Excellent institute | 019, Teacher colony, near SBI bank, Surada, Ganjam, Odisha, 761108</p>
         <p>Ph: 6371305069</p>
@@ -589,8 +663,9 @@
     let scrollTop;
 
     document.addEventListener('mousedown', (e) => {
-        // Prevent drag behavior if clicking a button (like Print) or link
-        if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) return;
+        // Prevent drag behavior if clicking a button (like Print/Unlock) or input
+        const tag = e.target.tagName.toLowerCase();
+        if (tag === 'button' || e.target.closest('button') || tag === 'input') return;
         
         isDown = true;
         document.body.classList.add('is-dragging');
@@ -615,6 +690,19 @@
         const walk = (y - startY) * 1.5; // The * 1.5 increases scroll speed slightly
         window.scrollTo(0, scrollTop - walk);
     });
+
+    // --- DCA Locked Module Logic ---
+    function checkDcaPassword() {
+        const input = document.getElementById('dcaPass').value;
+        // Check for DCA password exactly
+        if (input === "DCA") {
+            // Hide lock screen, show content
+            document.getElementById('dca-lock-screen').style.display = 'none';
+            document.getElementById('dca-locked-content').style.display = 'block';
+        } else {
+            document.getElementById('dca-wrong-pass').style.display = 'block';
+        }
+    }
 </script>
 
 </body>
