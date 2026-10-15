@@ -692,17 +692,89 @@
     });
 
     // --- DCA Locked Module Logic ---
+    function unlockDcaSection() {
+        const lockEl = document.getElementById('dca-lock-screen');
+        const contentEl = document.getElementById('dca-locked-content');
+        if (lockEl) lockEl.style.display = 'none';
+        if (contentEl) contentEl.style.display = 'block';
+    }
+
     function checkDcaPassword() {
-        const input = document.getElementById('dcaPass').value;
-        // Check for DCA password exactly
+        const input = document.getElementById('dcaPass').value.trim().toUpperCase();
         if (input === "DCA") {
-            // Hide lock screen, show content
-            document.getElementById('dca-lock-screen').style.display = 'none';
-            document.getElementById('dca-locked-content').style.display = 'block';
+            unlockDcaSection();
         } else {
             document.getElementById('dca-wrong-pass').style.display = 'block';
         }
     }
+
+    // 📱 MOBILE APP CHAPTER ISOLATION & OFFLINE PDF BRIDGE
+    (function() {
+        const isApp = window.isExcellentMobileApp || window.location.hash.includes('admin') || window.location.search.includes('chapter=');
+        if (isApp) {
+            unlockDcaSection();
+            const headerEl = document.querySelector('header');
+            if (headerEl) headerEl.style.display = 'none';
+        }
+
+        // Group each .section-header and its following .port-card elements into a chapter
+        const headers = Array.from(document.querySelectorAll('.section-header'));
+        const chapterGroups = headers.map(hdr => {
+            const cards = [];
+            const wrapper = hdr.closest('#dca-hardware-mastery');
+            if (wrapper) {
+                cards.push(...Array.from(wrapper.querySelectorAll('#dca-locked-content .port-card')));
+                return { header: hdr, wrapper: wrapper, cards: cards };
+            }
+            let next = hdr.nextElementSibling;
+            while (next && !next.classList.contains('section-header') && next.id !== 'dca-hardware-mastery' && next.tagName !== 'FOOTER') {
+                if (next.classList.contains('port-card')) cards.push(next);
+                next = next.nextElementSibling;
+            }
+            return { header: hdr, wrapper: null, cards: cards };
+        });
+
+        window.loadContent = function(index) {
+            if (index < 0 || index >= chapterGroups.length) return;
+            unlockDcaSection();
+            const headerEl = document.querySelector('header');
+            if (headerEl) headerEl.style.display = 'none';
+
+            chapterGroups.forEach((grp, i) => {
+                const show = (i === index);
+                grp.header.style.display = show ? 'block' : 'none';
+                if (grp.wrapper) grp.wrapper.style.display = show ? 'block' : 'none';
+                grp.cards.forEach(c => c.style.display = show ? 'flex' : 'none');
+            });
+            window.scrollTo(0, 0);
+        };
+
+        window.getCourseData = function() {
+            return chapterGroups.map((grp, idx) => {
+                const title = grp.header.innerText.trim() || `Part ${idx + 1}`;
+                const topics = grp.cards.map(card => {
+                    const h3 = card.querySelector('h3');
+                    const img = card.querySelector('img');
+                    const clone = card.querySelector('.port-info') ? card.querySelector('.port-info').cloneNode(true) : card.cloneNode(true);
+                    const cloneH3 = clone.querySelector('h3');
+                    if (cloneH3) cloneH3.remove();
+                    return {
+                        heading: h3 ? h3.innerText.trim() : '',
+                        text: clone.innerText.trim(),
+                        shortcut: '',
+                        imgSrc: img ? (img.getAttribute('src') || '') : ''
+                    };
+                });
+                return { id: `part${idx + 1}`, title: title, topics: topics };
+            });
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('chapter')) {
+            const chIdx = parseInt(urlParams.get('chapter'), 10);
+            if (!isNaN(chIdx)) window.loadContent(chIdx);
+        }
+    })();
 </script>
 
 </body>
